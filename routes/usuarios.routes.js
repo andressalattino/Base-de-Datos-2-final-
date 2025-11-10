@@ -1,30 +1,44 @@
+
+//  routes/usuarios.routes.js — CRUD completo de Usuarios
+
 import express from "express";
-import { registrarUsuario, loginUsuario } from "../controllers/usuarios.controller.js";
-import { verificarToken } from "../middleware/auth.js";
-import { verificarAdmin } from "../middleware/verificarAdmin.js"; // ✅ mover arriba
+import {
+  registrarUsuario,
+  loginUsuario,
+  obtenerUsuarios,
+  obtenerUsuarioPorId,
+  actualizarUsuario,
+  eliminarUsuario,
+} from "../controllers/usuarios.controller.js";
 
 const router = express.Router();
 
-// Rutas públicas
-router.post("/register", registrarUsuario);
+
+//  AUTENTICACIÓN
+
+// Registro (crear usuario)
+router.post("/registro", registrarUsuario);
+
+// Login de usuario existente
 router.post("/login", loginUsuario);
 
-// RUTA PROTEGIDA (solo con token válido)
-router.get("/perfil", verificarToken, (req, res) => {
-  res.json({
-    success: true,
-    message: "Accediste al perfil protegido correctamente ✅",
-    user: req.user,
-  });
-});
 
-// 🔒 RUTA SOLO PARA ADMIN
-router.get("/solo-admin", verificarToken, verificarAdmin, (req, res) => {
-  res.json({
-    success: true,
-    message: "Bienvenido, administrador ✅",
-    user: req.user,
-  });
-});
+//  CRUD DE USUARIOS
+
+
+// Obtener todos los usuarios
+router.get("/", obtenerUsuarios);
+
+// Obtener un usuario por su ID
+router.get("/:id", obtenerUsuarioPorId);
+
+// Actualizar usuario
+router.patch("/:id", actualizarUsuario);
+
+// Eliminar usuario
+router.delete("/:id", eliminarUsuario);
+
+
+//  Exportar router
 
 export default router;

@@ -1,18 +1,21 @@
 import mongoose from "mongoose";
 
-const itemPedidoSchema = new mongoose.Schema({
-  producto: { type: mongoose.Schema.Types.ObjectId, ref: "Producto" },
-  cantidad: Number,
-  subtotal: Number
-}, { _id: false });
-
-const pedidoSchema = new mongoose.Schema({
-  usuario: { type: mongoose.Schema.Types.ObjectId, ref: "Usuario" },
-  fecha: { type: Date, default: Date.now },
-  estado: { type: String, enum: ["pendiente", "pagado", "enviado", "cancelado"], default: "pendiente" },
-  total: Number,
-  metodoPago: String,
-  items: [itemPedidoSchema]
-}, { timestamps: true });
+const pedidoSchema = new mongoose.Schema(
+  {
+    usuario: { type: mongoose.Schema.Types.ObjectId, ref: "Usuario", required: true },
+    items: [
+      {
+        producto: { type: mongoose.Schema.Types.ObjectId, ref: "Producto", required: true },
+        cantidad: { type: Number, required: true },
+        subtotal: { type: Number, required: true },
+      },
+    ],
+    total: { type: Number, required: true },
+    metodoPago: { type: String, enum: ["tarjeta", "efectivo", "transferencia"], required: true },
+    direccionEnvio: { type: String, required: true },
+    estado: { type: String, enum: ["pendiente", "enviado", "entregado"], default: "pendiente" },
+  },
+  { timestamps: true }
+);
 
 export default mongoose.model("Pedido", pedidoSchema);

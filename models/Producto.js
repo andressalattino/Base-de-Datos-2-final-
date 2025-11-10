@@ -5,8 +5,8 @@ const productoSchema = new mongoose.Schema({
   descripcion: { type: String, required: true },
   precio: { type: Number, required: true },
   stock: { type: Number, required: true },
-  categoria: { type: mongoose.Schema.Types.ObjectId, ref: "Categoria" },
-  imagen: String
+  categoria: { type: mongoose.Schema.Types.ObjectId, ref: "Categoria" }, // 👈 ref correcta
+  imagen: String,
 }, { timestamps: true });
 
 export default mongoose.model("Producto", productoSchema);
